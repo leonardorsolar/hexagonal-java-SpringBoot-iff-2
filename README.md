@@ -1,9 +1,34 @@
-# Tutorial Arquitetura Hexagonal - CRUD de Usuários - Api - MongoDB (nosql) - Kafka(mensageria)
+# Tutorial Arquitetura Hexagonal - CRUD de Usuários | API + MongoDB (NoSQL) + Kafka (Mensageria)
 
-Aprenda na prática como aplicar a arquitetura hexagonal em microsserviços utilizando Java, Spring Boot, MongoDB e Kafka
-Criaremos o CRUD de clientes
+Aprenda na prática como aplicar a **Arquitetura Hexagonal** em microsserviços utilizando **Java**, **Spring Boot**, **MongoDB** e **Kafka**.
 
-# Parte 1: Criação do CREATE de clientes
+Neste projeto, construiremos um **CRUD de Clientes**, passando por todas as camadas da arquitetura de forma clara e orientada.
+
+---
+
+Nesta segunda etapa, nosso foco será o desenvolvimento de uma **API CRUD de Usuários**. Você aprenderá, na prática, como:
+
+-   **Isolar o domínio da aplicação**
+-   **Garantir testabilidade da lógica de negócio**
+-   **Promover o desacoplamento entre as camadas**
+
+Essa separação é essencial para manter o código limpo, reutilizável e fácil de evoluir, especialmente em sistemas baseados em microsserviços.
+
+## 🧩 Qual é a função da camada de **Domínio**?
+
+A camada de **Domínio** (também chamada de camada de **modelo de negócio**) é o **coração da aplicação**. Ela representa os **conceitos centrais** do seu sistema e deve conter:
+
+1. **Entidades**: objetos com identidade e ciclo de vida (como `Customer` e `Address`);
+2. **Regras de negócio puras**: validações, comportamentos e restrições;
+3. **Objetos de valor (Value Objects)**: como `Address`, que não tem identidade própria.
+
+### ✔️ Sua função principal é **modelar o negócio**, de forma isolada, **sem depender de frameworks**, banco de dados, API, etc.
+
+---
+
+Vamos lá!
+
+# Parte 1: Criação da classe clientes (Customer)
 
 # Camada Domain
 
@@ -58,6 +83,8 @@ public class Customer {
 ```
 
 obs.: A camada **domain** deve ser independente de qualquer tecnologia externa: ela não pode conter dependências de frameworks, nem ser acessada diretamente por camadas externas sem passar pelas interfaces (portas) da aplicação. Veja que importamos os getter e setter na mão e não utilizamos a tecnologia lombok do framework Spring.
+
+**Passo 2: Criando do teste unitário**
 
 **Criando um test unitário para Customer na camada Domain**
 
@@ -238,7 +265,9 @@ class CustomerTest {
 }
 ```
 
-**Passo 2: Criando a classe Address na camada Domain**
+# Parte 2: Criação da classe Endereço do cliente (Address)
+
+**Passo 1: Criando a classe Address na camada Domain**
 
 Iremos criar a classe Address com os seguintes atributos:
 street;
@@ -292,6 +321,8 @@ public class Address {
     }
 }
 ```
+
+**Passo 2: Criando do teste unitário**
 
 Crie um test para a classe Address:
 
@@ -362,8 +393,49 @@ Para rodar somente o teste da classe AddressTest.java com Maven, use o seguinte 
 mvn -Dtest=AddressTest test
 ```
 
-# Camada application - Usecase
+## 🔍 E no seu código, há regras de negócio?
 
-**Passo 3: Criando a classe ? na UseCase**
+Atualmente, **não** há **regras de negócio implementadas diretamente** na classe `Customer`. O que você tem são apenas:
+
+-   **Construtores**
+-   **Atributos com getters e setters**
+-   Uma **flag (`isValidCpf`)** que poderia indicar uma regra, mas ela não é validada aqui.
+
+---
+
+## ✅ Como adicionar uma regra de negócio?
+
+Vamos supor que você queira garantir que o CPF seja válido no momento da criação do objeto. Essa lógica deveria estar no domínio. Exemplo:
+
+```java
+public Customer(String id, String name, Address address, String cpf) {
+    this.id = id;
+    this.name = name;
+    this.address = address;
+    this.setCpf(cpf); // já valida aqui
+}
+
+// Validação simples como exemplo
+public void setCpf(String cpf) {
+    if (!isValidCpf(cpf)) {
+        throw new IllegalArgumentException("CPF inválido");
+    }
+    this.cpf = cpf;
+    this.isValidCpf = true;
+}
+
+private boolean isValidCpf(String cpf) {
+    // lógica de validação real de CPF aqui (mockada por enquanto)
+    return cpf != null && cpf.length() == 11;
+}
+```
+
+Assim, o **domínio assume a responsabilidade de manter a integridade do negócio**.
+
+---
+
+# Procimos passos:
+
+Depois de criar as classes de domínio Customer e Address, o próximo passo na arquitetura hexagonal é começar a camada de aplicação, responsável por orquestrar os casos de uso do sistema.
 
 https://github.com/DaniloArantesSilva/hexagonal-architecture
