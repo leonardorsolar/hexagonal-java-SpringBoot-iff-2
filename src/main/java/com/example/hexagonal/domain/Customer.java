@@ -1,6 +1,6 @@
 package com.example.hexagonal.domain;
 
-import org.springframework.boot.autoconfigure.amqp.RabbitConnectionDetails.Address;
+//import org.springframework.boot.autoconfigure.amqp.RabbitConnectionDetails.Address;
 
 public class Customer {
 
