@@ -434,8 +434,26 @@ Assim, o **domínio assume a responsabilidade de manter a integridade do negóci
 
 ---
 
-# Procimos passos:
+# Próximos passos:
 
-Depois de criar as classes de domínio Customer e Address, o próximo passo na arquitetura hexagonal é começar a camada de aplicação, responsável por orquestrar os casos de uso do sistema.
+### 📌 Próximos passos:
 
-https://github.com/DaniloArantesSilva/hexagonal-architecture
+3. **Implementar o Usecase (Application) - CreateCustomerUseCase**
+
+    - Criar a classe usecase responsável por orquestrar os casos de uso do sistema.
+
+4. **Implementar o Adapter (porta de saída) - clientAdapter**
+
+    - Implementação o adapter de busca de endereço via api externa.
+
+5. **Implementar o Adapter (porta de saída) - repositório**
+
+    - Implementação concreta do repositório usando MongoDB.
+
+6. **Criar o Adapter de inserção do cliente**
+
+    - Para expor o endpoint REST e permitir a criação de clientes via HTTP.
+
+7. **Criar o Controller (porta de entrada)**
+
+    - Para expor o endpoint REST e permitir a criação de clientes via HTTP.
